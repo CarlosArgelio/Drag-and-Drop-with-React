@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "./App.css";
+
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 const initialTasks = [
   {
@@ -21,42 +22,94 @@ const initialTasks = [
   },
 ];
 
+// const reorder = (list, startIndex, endIndex) => {
+//   const result = [...list];
+//   const [removed] = result.splice(startIndex, 1);
+//   result.splice(endIndex, 0, removed);
+
+//   return result;
+// };
+
 function App() {
   const [tasks, setTasks] = useState(initialTasks);
-
-  const onDragEnd = (result) => {
-    console.log(result);
-    // Implement your logic for updating the order of tasks here
-  };
-
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext
+      onDragEnd={(result) => {
+        console.log(result);
+        
+        // const { source, destination } = result;
+        // if (!destination) {
+        //   return;
+        // }
+        // if (
+        //   source.index === destination.index &&
+        //   source.droppableId === destination.droppableId
+        // ) {
+        //   return;
+        // }
+
+        // setTasks((prevTasks) =>
+        //   reorder(prevTasks, source.index, destination.index)
+        // );
+      }}
+    >
       <div className="app">
         <h1>Estudiar</h1>
-        <Droppable droppableId="tasks" direction="vertical">
-          {(provided) => (
+        <Droppable droppableId="tasks">
+          {(droppableProvided) => (
             <ul
-              {...provided.droppableProps}
-              ref={provided.innerRef}
+              {...droppableProvided.droppableProps}
+              ref={droppableProvided.innerRef}
               className="task-container"
             >
               {tasks.map((task, index) => (
-                <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
-                  {(provided) => (
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
+                <Draggable key={task.id} draggableId={task.id} index={index}>
+                  {(draggableProvided) => (
+                    <li
+                      {...draggableProvided.draggableProps}
+                      ref={draggableProvided.innerRef}
+                      {...draggableProvided.dragHandleProps}
                       className="task-item"
                     >
                       {task.text}
-                    </div>
+                    </li>
                   )}
                 </Draggable>
               ))}
-              {provided.placeholder}
+              {droppableProvided.placeholder}
             </ul>
           )}
+        </Droppable>
+
+        <Droppable droppableId="tasks-2">
+          {(droppableProvided) => (
+              <ul
+                {...droppableProvided.droppableProps}
+                ref={droppableProvided.innerRef}
+                className="task-container"
+              >
+                {tasks.map((task) => {
+                  let idx = 3
+                  idx = idx + 1
+
+                  return (
+                    <Draggable key={`${task.id}-02`} draggableId={`${task.id}-02`} index={idx}>
+                      {(draggableProvided) => (
+                        <li
+                          {...draggableProvided.draggableProps}
+                          ref={draggableProvided.innerRef}
+                          {...draggableProvided.dragHandleProps}
+                          className="task-item"
+                        >
+                          {task.text}-02
+                        </li>
+                      )}
+                    </Draggable>
+                  )
+                })}
+                {droppableProvided.placeholder}
+              </ul>
+            )}
         </Droppable>
       </div>
     </DragDropContext>
