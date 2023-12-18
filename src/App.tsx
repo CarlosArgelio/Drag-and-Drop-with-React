@@ -22,13 +22,13 @@ const initialTasks = [
   },
 ];
 
-// const reorder = (list, startIndex, endIndex) => {
-//   const result = [...list];
-//   const [removed] = result.splice(startIndex, 1);
-//   result.splice(endIndex, 0, removed);
+const reorder = (list, startIndex, endIndex) => {
+  const result = [...list];
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
 
-//   return result;
-// };
+  return result;
+};
 
 function App() {
   const [tasks, setTasks] = useState(initialTasks);
@@ -37,20 +37,20 @@ function App() {
       onDragEnd={(result) => {
         console.log(result);
         
-        // const { source, destination } = result;
-        // if (!destination) {
-        //   return;
-        // }
-        // if (
-        //   source.index === destination.index &&
-        //   source.droppableId === destination.droppableId
-        // ) {
-        //   return;
-        // }
+        const { source, destination } = result;
+        if (!destination) {
+          return;
+        }
+        if (
+          source.index === destination.index &&
+          source.droppableId === destination.droppableId
+        ) {
+          return;
+        }
 
-        // setTasks((prevTasks) =>
-        //   reorder(prevTasks, source.index, destination.index)
-        // );
+        setTasks((prevTasks) =>
+          reorder(prevTasks, source.index, destination.index)
+        );
       }}
     >
       <div className="app">
@@ -79,37 +79,6 @@ function App() {
               {droppableProvided.placeholder}
             </ul>
           )}
-        </Droppable>
-
-        <Droppable droppableId="tasks-2">
-          {(droppableProvided) => (
-              <ul
-                {...droppableProvided.droppableProps}
-                ref={droppableProvided.innerRef}
-                className="task-container"
-              >
-                {tasks.map((task) => {
-                  let idx = 3
-                  idx = idx + 1
-
-                  return (
-                    <Draggable key={`${task.id}-02`} draggableId={`${task.id}-02`} index={idx}>
-                      {(draggableProvided) => (
-                        <li
-                          {...draggableProvided.draggableProps}
-                          ref={draggableProvided.innerRef}
-                          {...draggableProvided.dragHandleProps}
-                          className="task-item"
-                        >
-                          {task.text}-02
-                        </li>
-                      )}
-                    </Draggable>
-                  )
-                })}
-                {droppableProvided.placeholder}
-              </ul>
-            )}
         </Droppable>
       </div>
     </DragDropContext>
